@@ -1,4 +1,4 @@
-# client
+# vue-cli-todo-example 
 
 ## Project setup
 ```
