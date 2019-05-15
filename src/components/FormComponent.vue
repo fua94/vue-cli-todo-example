@@ -1,5 +1,6 @@
 <template>
-    <form @submit.prevent="onClickAdd">
+    <form
+        @submit.prevent="onClickAdd">
         <div class="card mb-2">
             <div class="card-body">
                 <div class="card-title">
@@ -14,6 +15,8 @@
                         v-model="task.description"></textarea>
                     </div>
                     <button type="submit" class="btn btn-primary btn-block">Add</button>
+                    <button type="button" class="btn btn-primary btn-block"
+                        @click="onClickCancel">Cancel</button>
                 </p>
             </div>
         </div>
@@ -36,6 +39,9 @@
         methods: {
             onClickAdd(){
                 this.$emit('add', this.task)
+            },
+            onClickCancel(){
+                this.$emit('cancel')
             }
         }
     }

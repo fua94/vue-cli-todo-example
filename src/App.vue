@@ -11,7 +11,8 @@
             <div class="col-md-4">
                 <form-component
                     v-if="isAdd"
-                    @add="onSubmitAdd(...arguments)">
+                    @add="onSubmitAdd(...arguments)"
+                    @cancel="onPressCancel">
                 </form-component>
                 <button @click="isAdd=true" class="btn btn-primary"
                     v-else>
@@ -58,7 +59,10 @@
             },
             onPressUpdate(index, taskToUpdate){
                 this.updateTask(taskToUpdate, index)
-            }
+            },
+            onPressCancel(){
+                this.isAdd = false
+            },
         }
     }
 </script>

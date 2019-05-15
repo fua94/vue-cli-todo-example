@@ -29,7 +29,11 @@
                             @click="onClickUpdate"
                             v-else>Save</button>
                         <button type="button" class="btn btn-danger "
-                            @click="onClickDelete">Delete</button>
+                            @click="onClickDelete"
+                            v-if="!isEdit">Delete</button>
+                        <button type="button" class="btn btn-danger "
+                            @click="onClickCancel"
+                            v-else>Cancel</button>
                     </div>
                 </div>
             </div>
@@ -58,6 +62,9 @@
             },
             onClickUpdate(){
                 this.$emit('update', this.task)
+                this.isEdit = false
+            },
+            onClickCancel(){
                 this.isEdit = false
             }
         }
