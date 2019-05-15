@@ -5,13 +5,13 @@
                 v-for="(task, index) in tasks"
                 :key="task._id"
                 :task="task"
-                @delete="deleteTask(index, task)"
-                @update="updateTask(index, ...arguments)">
+                @delete="onPressDelete(index, task)"
+                @update="onPressUpdate(index, ...arguments)">
             </task-component>
             <div class="col-md-4">
                 <form-component
                     v-if="isAdd"
-                    @add="addTask(...arguments)">
+                    @add="onSubmitAdd(...arguments)">
                 </form-component>
                 <button @click="isAdd=true" class="btn btn-primary"
                     v-else>
@@ -28,6 +28,8 @@
 
     const baseUrl = './api/tasks/'
 
+    import { mapGetters, mapActions } from 'vuex'
+
     export default {
         components: {
             TaskComponent,
@@ -35,45 +37,27 @@
         },
         data() {
             return {
-                tasks: [],
                 isAdd: false,
                 isEdit: false
             }
         },
         created() {
-            this.getTasks()
+            this.fetchTasks()
         },
+        computed: mapGetters(['tasks']),
         methods: {
-            async getTasks(){
-                await this.axios.get(baseUrl).then(res => {
-					this.tasks = res.data
-				}).catch(error => {
-					console.log(error)
-				})
+            ...mapActions(['fetchTasks', 'addTask', 'deleteTask', 'updateTask']),
+            onSubmitAdd(newTask){
+                this.addTask(newTask)
+                this.isAdd = false
             },
-            async addTask(newTask){
-                await this.axios.post(baseUrl, newTask).then(res => {
-					this.tasks.push(newTask)
-                    this.isAdd = false
-				}).catch(error => {
-					console.log(error)
-				})
-            },
-            async deleteTask(index, deletedTask){
+            onPressDelete(index, taskToDelete){
                 if(confirm('Are u sure?')){
-                    await this.axios.delete(baseUrl + deletedTask._id).then(res => {
-                        this.tasks.splice(index, 1)
-                    }).catch(error => {
-                        console.log(error)
-                    })
+                    this.deleteTask(taskToDelete, index)
                 }
             },
-            async updateTask(index, updatedTask){
-                await this.axios.put(baseUrl + updatedTask._id, updatedTask).then(res => {
-                    this.tasks[index] = updatedTask
-                }).catch(error => {
-                    console.log(error)
-                })
+            onPressUpdate(index, taskToUpdate){
+                this.updateTask(taskToUpdate, index)
             }
         }
     }
