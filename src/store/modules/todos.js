@@ -1,8 +1,8 @@
 import axios from 'axios'
 
 const state = {
-    token: '',
-    tasks: []
+    tasks: [],
+    token: null
 }
 
 const getters = {
@@ -12,23 +12,26 @@ const getters = {
 const baseUrl = './api/tasks/'
 
 const actions = {
-    async fetchTasks({ commit }) {
-        let userUri = './users/authenticate/'
-        var token = ''
-        let user = {
-            email: "fulloa@email.com",
-        	password: "123456"
-        }
-        await axios.post(userUri, user).then(res => {
-            commit('setToken', res.data.token)
-        }).catch(error => {
-            console.log(error)
-        })
+    fetchTasks({ commit }, token) {
+        return new Promise((resolve, reject) => {
+            commit('setToken', token)
+            axios.get(baseUrl,
+               { headers: {'token-access': state.token} }
+            )
+            .then(response => {
+                if(response.data.status == "error"){
+                    reject()
+                }
+                else{
+                    commit('setTasks', response.data)
+                    resolve()
+                }
 
-        const response = await axios.get(baseUrl,
-            { headers: {'token-access': state.token} }
-        )
-        commit('setTasks', response.data)
+            })
+            .catch(error => {
+                console.log(error)
+            })
+          })
     },
     async addTask({ commit }, task) {
         await axios.post(baseUrl, task,
@@ -51,11 +54,11 @@ const actions = {
 }
 
 const mutations = {
-    setToken: (state, token) => (state.token = token),
-    setTasks: (state, tasks) => (state.tasks = tasks),
+    setToken: (state, token) => state.token = token,
+    setTasks: (state, tasks) => state.tasks = tasks,
     newTask: (state, task) => state.tasks.push(task),
     removeTask: (state, index) => state.tasks.splice(index, 1),
-    refreshTask: (state, index, task) => (state.tasks[index] = task)
+    refreshTask: (state, index, task) => state.tasks[index] = task
 }
 
 export default {

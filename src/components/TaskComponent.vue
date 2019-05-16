@@ -22,18 +22,20 @@
                         v-model="task.description"></textarea>
                     </div>
                     <div class="d-flex justify-content-between">
-                        <button type="button" class="btn btn-info"
-                            @click="onClickEdit"
-                            v-if="!isEdit">Update</button>
-                        <button type="button" class="btn btn-info"
-                            @click="onClickUpdate"
-                            v-else>Save</button>
-                        <button type="button" class="btn btn-danger "
-                            @click="onClickDelete"
-                            v-if="!isEdit">Delete</button>
-                        <button type="button" class="btn btn-danger "
-                            @click="onClickCancel"
-                            v-else>Cancel</button>
+                        <template
+                            v-if="!isEdit">
+                            <button type="button" class="btn btn-info"
+                                @click="onClickEdit">Update</button>
+                            <button type="button" class="btn btn-danger "
+                                @click="onClickDelete">Delete</button>
+                        </template>
+                        <template
+                            v-else>
+                            <button type="button" class="btn btn-info"
+                                @click="onClickUpdate">Save</button>
+                            <button type="button" class="btn btn-danger "
+                                @click="onClickCancel">Cancel</button>
+                        </template>
                     </div>
                 </div>
             </div>
